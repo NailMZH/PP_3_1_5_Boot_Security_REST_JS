@@ -35,6 +35,26 @@ public class User implements UserDetails {
     public User() {
     }
 
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setPasswordConfig(String passwordConfig) {
+        this.passwordConfig = passwordConfig;
+    }
+
+    public String getPasswordConfig() {
+        return passwordConfig;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
     public long getId() {
         return id;
     }
@@ -94,13 +114,4 @@ public class User implements UserDetails {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
 }
