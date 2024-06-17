@@ -7,25 +7,21 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.kata.spring.boot_security.demo.service.UserService;
 
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private UserDetailsService userDetailsService;
-//    @Bean
-//    public UserDetailsService userDetailsService(UserService userService) {
-//        return userService;
-//    }
+    private UserService userService;
 
 
     @Autowired
-    public void setUserDetailsService(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
+    public void setUserDetailsService(UserService userService) {
+        this.userService = userService;
     }
 
     private final SuccessUserHandler successUserHandler;
@@ -38,19 +34,39 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .antMatchers("/authenticated/**").authenticated()
+      //  log.info("Dao Authentication Provider");
+        http.authorizeRequests()
+                .antMatchers("/", "/index").permitAll() // доступность всем
+//                .antMatchers("/authenticated/**").authenticated()
+                .antMatchers("/user/**").hasAnyRole("USER") // разрешаем входить на /user пользователям с ролью User
+                .antMatchers("/user_info", "/admin", "/user**").authenticated()
+
+                .antMatchers("/admin/**").hasAnyRole("ADMIN") // ROLE_ADMIN, ROLE_SUPERADMIN
+
                 .and()
-                .formLogin().successHandler(successUserHandler)
-                .permitAll()
-                .and()
-                .logout()
-                .permitAll();
+                .formLogin().successHandler(successUserHandler) // подключаем наш SuccessHandler для перенеправления по ролям
+                .and();
+//                .anyRequest().permitAll()
+//                .and()
+//                .formLogin();
     }
+
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http
+//                .authorizeRequests()
+//                .antMatchers("/authenticated/**").authenticated()
+////                .antMatchers("/admin/**").hasRole("ADMIN")
+////                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+//                .and()
+//                .formLogin().successHandler(successUserHandler)
+//                .permitAll()
+//                .and()
+//                .logout()
+//                .permitAll();
+//    }
 
     // аутентификация inMemory
 //    @Bean
@@ -74,7 +90,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setPasswordEncoder(passwordEncoder());
-        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setUserDetailsService(userService);
         return authenticationProvider;
     }
 }
