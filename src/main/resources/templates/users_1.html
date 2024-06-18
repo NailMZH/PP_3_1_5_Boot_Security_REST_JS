@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User panel</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-4">User</div>
+        <div class="col-8">
+            <h2>User information-page</h2>
+            <h4>About user</h4>
+            <div>
+                <table>
+
+                    <tr>
+                        <td>UserName</td>
+                        <td>Email</td>
+                    </tr>
+                    <tr>
+                        <td th:text="${user_0.getUsername()}">UserName</td>
+                        <td th:text="${user_0.getEmail()}">Email</td>
+
+                    <tr>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

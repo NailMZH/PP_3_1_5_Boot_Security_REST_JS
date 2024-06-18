@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.configs;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,59 +15,37 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
     private UserService userService;
 
 
     @Autowired
-    public void setUserDetailsService(UserService userService) {
-        this.userService = userService;
-    }
+    private SuccessUserHandler successUserHandler;
 
-    private final SuccessUserHandler successUserHandler;
-
-    public WebSecurityConfig(SuccessUserHandler successUserHandler) {
-        this.successUserHandler = successUserHandler;
-    }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-      //  log.info("Dao Authentication Provider");
-        http.authorizeRequests()
-                .antMatchers("/", "/index").permitAll() // доступность всем
-//                .antMatchers("/authenticated/**").authenticated()
-                .antMatchers("/user/**").hasAnyRole("USER") // разрешаем входить на /user пользователям с ролью User
-                .antMatchers("/user_info", "/admin", "/user**").authenticated()
-
-                .antMatchers("/admin/**").hasAnyRole("ADMIN") // ROLE_ADMIN, ROLE_SUPERADMIN
-
+        http
+                .authorizeRequests()
+                .antMatchers("/", "/index").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/user/**").hasAnyRole("ADMIN", "USER")
+                .anyRequest().authenticated()
                 .and()
-                .formLogin().successHandler(successUserHandler) // подключаем наш SuccessHandler для перенеправления по ролям
-                .and();
-//                .anyRequest().permitAll()
-//                .and()
-//                .formLogin();
+                .formLogin()
+                .successHandler(successUserHandler)
+                .permitAll()
+                .and()
+                .logout().permitAll();
     }
-
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeRequests()
-//                .antMatchers("/authenticated/**").authenticated()
-////                .antMatchers("/admin/**").hasRole("ADMIN")
-////                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-//                .and()
-//                .formLogin().successHandler(successUserHandler)
-//                .permitAll()
-//                .and()
-//                .logout()
-//                .permitAll();
-//    }
 
     // аутентификация inMemory
 //    @Bean
@@ -85,6 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {

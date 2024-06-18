@@ -14,6 +14,7 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,7 @@ public class UserService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
+    @Transactional(readOnly = true)
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
@@ -46,4 +48,14 @@ public class UserService implements UserDetailsService {
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
+
+    @Transactional
+    public User getUser(long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+//    @Transactional(readOnly = true)
+//    public User printUser(String username) {
+//        return userRepository.findByUsername(username);
+//    }
 }
