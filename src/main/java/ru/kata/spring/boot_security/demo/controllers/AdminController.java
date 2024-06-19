@@ -24,7 +24,8 @@ public class AdminController {
     }
 
     @GetMapping("/addNewUser")
-    public String addNewUser(@PathVariable User user, Model model) {
+    public String addNewUser( Model model) {
+        User user = new User();
         model.addAttribute("user", user);
         model.addAttribute("roles", Role.class);
         return "user-create";
