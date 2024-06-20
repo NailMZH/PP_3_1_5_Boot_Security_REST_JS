@@ -13,12 +13,18 @@
             <div>
                 <table>
                     <tr>
-                        <td>UserName</td>
+                        <td>Username</td>
+                        <td>First Name</td>
+                        <td>Last Name</td>
+                        <td>Age</td>
                         <td>Email</td>
                     </tr>
                     <tr>
-                        <td th:text="${user.getUsername()}">UserName</td>
-                        <td th:text="${user.getEmail()}">Email</td>
+                        <td th:text="${user.getUsername()}">...</td>
+                        <td th:text="${user.getFirstName()}">...</td>
+                        <td th:text="${user.getLastName()}">...</td>
+                        <td th:text="${user.getAge()}">...</td>
+                        <td th:text="${user.getEmail()}">...</td>
                     <tr>
                 </table>
             </div>

@@ -2,10 +2,7 @@ package ru.kata.spring.boot_security.demo.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
@@ -44,26 +41,29 @@ public class AdminController {
         userService.saveUser(user, selectedRoles);
         return "redirect:/admin";
     }
-//    @PostMapping("/saveUser")
-//    public String saveUser(@ModelAttribute("user") User user, Model model) {
-//        model.addAttribute("roles", roleServiceImpl.allRoles());
-//        userServiceImpl.saveUser(user);
-//        return "redirect:/admin_4";
+    @GetMapping("/users/delete")
+    public String deleteUserById(@RequestParam("id") long id) {
+        userService.deleteById(id);
+        return "redirect:/admin";
+    }
+    @GetMapping("/{id}/edit")
+    public String editUser(Model model, @PathVariable("id") long id) {
+        User user = userService.findById(id);
+        model.addAttribute("user", user );
+        model.addAttribute("userRoles", roleService.getRoles());
+        return "edit";
+    }
+    @PostMapping("/{id}")
+    public String edit(@ModelAttribute("user") User updatedUser, @RequestParam("selectedRoles") String[] selectedRoles) {
+        userService.saveUser(updatedUser, selectedRoles);
+        return "redirect:/admin";
+    }
+//    @PatchMapping("/{id}")
+//    public String getUpdateForm(@ModelAttribute("user") User user, @PathVariable("id") Long id,
+//                                @RequestParam("rolesList") String[] selectedRoles) {
+//        User newUser = userService.findById(id);
+//        userService.updateUser(user, newUser, selectedRoles);
+//        return "redirect:/admin";
 //    }
-//    @PostMapping("/saveUser")
-//    public String saveUser(@ModelAttribute("user") User user,
-//                           @RequestParam(required = false) String roleAdmin,
-//                           @RequestParam(required = false) String roleVip) {
-//        Set<Role> roles = new HashSet<>();
-//        roles.add(roleServiceImpl.getRoleByName("ROLE_USER"));
-//        if(roleAdmin != null && roleAdmin.equals("ROLE_ADMIN")) {
-//            roles.add(roleServiceImpl.getRoleByName("ROLE_ADMIN"));
-//        }
-//        if(roleVip != null && roleVip.equals("ROLE_VIP")) {
-//            roles.add(roleServiceImpl.getRoleByName("ROLE_VIP"));
-//        }
-//        user.setRoles(roles);
-//        userServiceImpl.saveUser(user);
-//        return "redirect:/admin_4";
-//    }
+
 }

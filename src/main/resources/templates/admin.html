@@ -9,17 +9,35 @@
   <h1>List of Users:</h1>
   <table>
     <tr>
-      <th>Name</th>
+      <th>Username</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Age</th>
       <th>Password</th>
+      <th>Roles</th>
       <th>Email</th>
       <th>Operations</th>
     </tr>
     <tr th:each="user : ${usersShow}" style="text-align:left">
       <td th:text="${user.username}"></td>
+      <td th:text="${user.firstName}"></td>
+      <td th:text="${user.lastName}"></td>
+      <td th:text="${user.age}"></td>
       <td th:text="${user.password}"></td>
+      <td th:text="${user.getRoles()}"></td>
+<!--      <td th:text="${user.roles.replace('[', '').replace(']', '')}"></td>-->
       <td th:text="${user.email}"></td>
-      <td><!-- Add operations here --></td>
-    </tr>
+
+      <td>
+        <form th:action="@{/users/delete}" method="get">
+          <input type="hidden" name="id" th:value="${user.getId()}">
+          <button type="submit">Delete</button>
+        </form>
+      </td>
+                  <td> <a th:href="@{/{id}/edit(id=${user.getId()})}">
+                      <button type="button">Edit user </button></a>
+                  </td>
+
   </table>
   <input type="button" value="Add User" onclick="window.location.href = 'addNewUser'"/>
 </div>
