@@ -14,14 +14,14 @@
       <th>Email</th>
       <th>Operations</th>
     </tr>
-    <tr th:each="user : ${admin_0}" style="text-align:left">
+    <tr th:each="user : ${usersShow}" style="text-align:left">
       <td th:text="${user.username}"></td>
       <td th:text="${user.password}"></td>
       <td th:text="${user.email}"></td>
       <td><!-- Add operations here --></td>
     </tr>
   </table>
-  <input type="button" value="add" onclick="window.location.href = 'addNewUser'"/>
+  <input type="button" value="Add User" onclick="window.location.href = 'addNewUser'"/>
 </div>
 </body>
 </html>

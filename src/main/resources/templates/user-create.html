@@ -19,14 +19,14 @@
     <label for="email">Email:</label>
     <input type="text" id="email" name="email"><br><br>
 
-    <label>
-        <input type="checkbox"
-               name="roleAdmin"
-               th:value="ROLE_ADMIN"
-               th:text="Администратор">
-    </label>
+    <label>Roles:</label><br>
+    <div th:each="role : ${allroles}">
+        <input type="checkbox" th:id="'role_' + ${role}" th:name="selectedRoles" th:value="${role}" />
+        <label th:for="'role_' + ${role}" th:text="${role}"></label><br>
+    </div>
 
-    <input type="submit" value="Save">
+    <button type="submit" class="btn btn-info col-2">Save User</button>
+
 </form>
 </body>
 </html>

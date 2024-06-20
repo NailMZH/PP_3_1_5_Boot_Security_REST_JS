@@ -1,8 +1,7 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
@@ -10,9 +9,12 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 import java.security.Principal;
 
 @Controller
-@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
 //    @GetMapping("/unsecured")
 //    public String usecuredPage() {
@@ -29,11 +31,11 @@ public class UserController {
 //        return "admin";
 //    }
 
-    @GetMapping(value = "/user_6")
-    public String printUser(Principal principal, ModelMap model) {
-        User user = userService.findByUsername(principal.getName());
-        model.addAttribute("user_0", user);
-        return "users_1";
+    @GetMapping(value = "/user")
+    public String printUser(Principal principal, Model model) {
+        User user = userService.getUserByUsername(principal.getName());
+        model.addAttribute("user", user);
+        return "users";
     }
 
 
