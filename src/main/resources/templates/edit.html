@@ -5,7 +5,10 @@
     <title>Update User</title>
 </head>
 <body>
-<form th:object="${user}" th:action="@{/admin/{id}(id=${user.id})}" method="POST">
+<form th:action="@{/updateUser}" th:object="${user}"
+      method="post" style="max-width: 600px; margin: 0 auto;">
+    <input type="hidden" th:field="*{id}" />
+
     <label for="username">Enter name</label>
     <input type="text" th:field="*{username}" id="username"/><br>
 
@@ -20,6 +23,9 @@
 
     <label for="password">Enter password</label>
     <input type="text" th:field="*{password}" id="password"/><br>
+
+    <label for="email">Enter password</label>
+    <input type="text" th:field="*{email}" id="email"/><br>
 
     <th:block th:each="role : ${userRoles}">
         <input type="checkbox" th:field="*{roles}" th:value="${role.id}" />

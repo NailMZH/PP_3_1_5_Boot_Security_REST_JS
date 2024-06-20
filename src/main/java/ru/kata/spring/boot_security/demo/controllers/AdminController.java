@@ -30,46 +30,36 @@ public class AdminController {
     }
 
     @GetMapping("/addNewUser")
-    public String addNewUser( Model model) {
+    public String addNewUser(Model model) {
         model.addAttribute("user", new User());
         model.addAttribute("allroles", roleService.getRoles());
         return "user-create";
     }
+
     @PostMapping("/saveUser")
     public String saveNewUser(
-            @ModelAttribute("user") User user,@RequestParam("selectedRoles") String[] selectedRoles) {
+            @ModelAttribute("user") User user, @RequestParam("selectedRoles") String[] selectedRoles) {
         userService.saveUser(user, selectedRoles);
         return "redirect:/admin";
     }
-//@PostMapping("/saveUser")
-//public String saveNewUser(
-//        User user,@RequestParam("selectedRoles") String[] selectedRoles) {
-//    userService.saveUser(user, selectedRoles);
-//    return "redirect:/admin";
-//}
+
     @GetMapping("/users/delete")
     public String deleteUserById(@RequestParam("id") long id) {
         userService.deleteById(id);
         return "redirect:/admin";
     }
+
     @GetMapping("/{id}/edit")
     public String editUser(Model model, @PathVariable("id") long id) {
         User user = userService.findById(id);
-        model.addAttribute("user", user );
+        model.addAttribute("user", user);
         model.addAttribute("userRoles", roleService.getRoles());
         return "edit";
     }
-//    @PostMapping("/{id}")
-//    public String edit(@ModelAttribute("user") User updatedUser, @RequestParam("selectedRoles") String[] selectedRoles) {
-//        userService.saveUser(updatedUser, selectedRoles);
-//        return "redirect:/admin";
-//    }
-//    @PatchMapping("/{id}")
-//    public String getUpdateForm(@ModelAttribute("user") User user, @PathVariable("id") Long id,
-//                                @RequestParam("rolesList") String[] selectedRoles) {
-//        User newUser = userService.findById(id);
-//        userService.updateUser(user, newUser, selectedRoles);
-//        return "redirect:/admin";
-//    }
 
+    @PostMapping("/updateUser")
+    public String saveUser(@ModelAttribute User user) {
+        userService.save(user);
+        return "redirect:/admin";
+    }
 }
