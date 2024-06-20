@@ -41,6 +41,12 @@ public class AdminController {
         userService.saveUser(user, selectedRoles);
         return "redirect:/admin";
     }
+//@PostMapping("/saveUser")
+//public String saveNewUser(
+//        User user,@RequestParam("selectedRoles") String[] selectedRoles) {
+//    userService.saveUser(user, selectedRoles);
+//    return "redirect:/admin";
+//}
     @GetMapping("/users/delete")
     public String deleteUserById(@RequestParam("id") long id) {
         userService.deleteById(id);
@@ -53,11 +59,11 @@ public class AdminController {
         model.addAttribute("userRoles", roleService.getRoles());
         return "edit";
     }
-    @PostMapping("/{id}")
-    public String edit(@ModelAttribute("user") User updatedUser, @RequestParam("selectedRoles") String[] selectedRoles) {
-        userService.saveUser(updatedUser, selectedRoles);
-        return "redirect:/admin";
-    }
+//    @PostMapping("/{id}")
+//    public String edit(@ModelAttribute("user") User updatedUser, @RequestParam("selectedRoles") String[] selectedRoles) {
+//        userService.saveUser(updatedUser, selectedRoles);
+//        return "redirect:/admin";
+//    }
 //    @PatchMapping("/{id}")
 //    public String getUpdateForm(@ModelAttribute("user") User user, @PathVariable("id") Long id,
 //                                @RequestParam("rolesList") String[] selectedRoles) {

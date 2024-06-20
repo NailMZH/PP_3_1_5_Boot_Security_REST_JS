@@ -1,29 +1,32 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Update User</title>
 </head>
 <body>
-<form th:method="POST" th:action="@{/admin/{id}(id=${user.getId()})}" th:object="${user}">
-    <input type="hidden" name="_method" value="PATCH">
-<!--<form th:action="@{/editUser/{id}(id=${user.id})}" th:object="${user}" method="post">-->
-<!--    <input type="hidden" name="id" th:value="${user.getId()}">-->
-<!--<form  th:action="@{/saveUser}" th:object="${user}" method="post">-->
-<!--    <input type="hidden" th:field="*{id}" value="${user.id}"/>-->
-
+<form th:object="${user}" th:action="@{/admin/{id}(id=${user.id})}" method="POST">
     <label for="username">Enter name</label>
     <input type="text" th:field="*{username}" id="username"/><br>
-    <label for="fistName">Enter Fist name</label>
-    <input type="text" th:field="*{firstName}" id="fistName"/><br>
-    <label for="lastName">Enter second name</label>
+
+    <label for="firstName">Enter First name</label>
+    <input type="text" th:field="*{firstName}" id="firstName"/><br>
+
+    <label for="lastName">Enter last name</label>
     <input type="text" th:field="*{lastName}" id="lastName"/><br>
-    <label for="age">Enter name</label>
+
+    <label for="age">Enter age</label>
     <input type="text" th:field="*{age}" id="age"/><br>
-    <label for="password">Enter name</label>
+
+    <label for="password">Enter password</label>
     <input type="text" th:field="*{password}" id="password"/><br>
 
-    <input type="submit" value = "Update User">
+    <th:block th:each="role : ${userRoles}">
+        <input type="checkbox" th:field="*{roles}" th:value="${role.id}" />
+        <label th:for="${#ids.prev('roles')}" th:text="${role.role}"></label><br>
+    </th:block>
+
+    <input type="submit" value="Update User">
 </form>
 </body>
 </html>
