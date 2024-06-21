@@ -9,26 +9,26 @@
       method="post" style="max-width: 600px; margin: 0 auto;">
     <input type="hidden" th:field="*{id}" />
 
-    <label for="username">Enter name</label>
+    <label for="username">Username</label>
     <input type="text" th:field="*{username}" id="username"/><br>
 
-    <label for="firstName">Enter First name</label>
+    <label for="firstName">First name</label>
     <input type="text" th:field="*{firstName}" id="firstName"/><br>
 
-    <label for="lastName">Enter last name</label>
+    <label for="lastName">Last name</label>
     <input type="text" th:field="*{lastName}" id="lastName"/><br>
 
-    <label for="age">Enter age</label>
+    <label for="age">Age</label>
     <input type="text" th:field="*{age}" id="age"/><br>
 
-    <label for="password">Enter password</label>
+    <label for="password">Password</label>
     <input type="text" th:field="*{password}" id="password"/><br>
 
-    <label for="email">Enter password</label>
+    <label for="email">Email</label>
     <input type="text" th:field="*{email}" id="email"/><br>
 
     <th:block th:each="role : ${userRoles}">
-        <input type="checkbox" th:field="*{roles}" th:value="${role.id}" />
+        <input type="checkbox" th:field="*{roles}"  th:value="${role.id}" />
         <label th:for="${#ids.prev('roles')}" th:text="${role.role}"></label><br>
     </th:block>
 

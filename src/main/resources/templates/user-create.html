@@ -9,13 +9,13 @@
 
 <form th:action="@{/saveUser}" th:object="${user}" method="post">
 
-    <label for="username">Name:</label>
+    <label for="username">Username:</label>
     <input type="text" id="username" name="username"><br><br>
 
-    <label for="firstName">Name:</label>
+    <label for="firstName">First Name:</label>
     <input type="text" id="firstName" name="firstName"><br><br>
 
-    <label for="lastName">Last name:</label>
+    <label for="lastName">Last Name:</label>
     <input type="text" id="lastName" name="lastName"><br><br>
 
     <label for="age">Age:</label>
@@ -29,7 +29,7 @@
 
     <label>Roles:</label><br>
     <div th:each="role : ${allroles}">
-        <input type="checkbox" th:id="'role_' + ${role}" th:name="selectedRoles" th:value="${role}" />
+        <input type="checkbox" th:id="'role_' + ${role}" th:name="rolesList" th:value="${role}" />
         <label th:for="'role_' + ${role}" th:text="${role}"></label><br>
     </div>
 

@@ -38,7 +38,7 @@ public class AdminController {
 
     @PostMapping("/saveUser")
     public String saveNewUser(
-            @ModelAttribute("user") User user, @RequestParam("selectedRoles") String[] selectedRoles) {
+            @ModelAttribute("user") User user, @RequestParam("rolesList") String[] selectedRoles) {
         userService.saveUser(user, selectedRoles);
         return "redirect:/admin";
     }
@@ -57,9 +57,17 @@ public class AdminController {
         return "edit";
     }
 
-    @PostMapping("/updateUser")
-    public String saveUser(@ModelAttribute User user) {
-        userService.save(user);
-        return "redirect:/admin";
-    }
+//    @PostMapping("/updateUser")
+//    public String updateUser(@ModelAttribute("user") User user, @PathVariable("id") long id,
+//                             @RequestParam("rolesList") String[] selectedRoles) {
+//        User newUser = userService.findById(id);
+//        userService.updateUser(user, newUser, selectedRoles);
+//        return "redirect:/admin";
+//    }
+@PostMapping("/updateUser")
+public String updateUser(User user) {
+
+    userService.save(user);
+    return "redirect:/admin";
+}
 }
