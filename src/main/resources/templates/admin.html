@@ -25,7 +25,6 @@
       <td th:text="${user.age}"></td>
       <td th:text="${user.password}"></td>
       <td th:text="${user.getRoles()}"></td>
-<!--      <td th:text="${user.roles.replace('[', '').replace(']', '')}"></td>-->
       <td th:text="${user.email}"></td>
 
       <td>
@@ -40,6 +39,9 @@
 
   </table>
   <input type="button" value="Add User" onclick="window.location.href = 'addNewUser'"/>
+  <form th:action="@{/logout}" method="post">
+    <button type="submit">Выйти</button>
+  </form>
 </div>
 </body>
 </html>

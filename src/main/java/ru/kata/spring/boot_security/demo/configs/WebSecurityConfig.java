@@ -36,10 +36,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .successHandler(successUserHandler)
                 .permitAll()
-                .and()
-                .logout().permitAll();
+                .loginPage("/login") // указываем страницу с формой логина
+                .successHandler(successUserHandler) //указываем логику обработки при логине
+                .permitAll();
+                http
+                        .logout()
+                        .logoutUrl("/logout") // указываем URL для выхода
+                        .logoutSuccessUrl("/login") // указываем URL, на который перейти после выхода
+                        .invalidateHttpSession(true); // инвалидация сессии после выхода
     }
 
     // аутентификация inMemory

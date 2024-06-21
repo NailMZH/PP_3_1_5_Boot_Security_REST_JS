@@ -16,20 +16,6 @@ public class UserController {
         this.userService = userService;
     }
 
-//    @GetMapping("/unsecured")
-//    public String usecuredPage() {
-//        return "unsecured";
-//    }
-//
-//    @GetMapping("/auth_page")
-//    public String authenticatedPage() {
-//        return "authenticated";
-//    }
-
-//    @GetMapping("/admin")
-//    public String adminPage() {
-//        return "admin";
-//    }
 
     @GetMapping(value = "/user")
     public String printUser(Principal principal, Model model) {
