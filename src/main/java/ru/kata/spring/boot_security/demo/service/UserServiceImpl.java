@@ -49,23 +49,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUser(User oldUser, User newUser, String[] selectedRoles) {
-        Optional<User> myUser = Optional.of(newUser);
-        myUser.get().setPassword(oldUser.getPassword());
-        myUser.get().setEmail(oldUser.getEmail());
-        myUser.get().setUsername(oldUser.getUsername());
-        myUser.get().setFirstName(oldUser.getFirstName());
-        myUser.get().setLastName(oldUser.getLastName());
-        myUser.get().setAge(oldUser.getAge());
-        Set<Role> roles = new HashSet<>();
-        Arrays.stream(selectedRoles)
-                .forEach(x -> roles.add(roleRepository.findRoleByRole(x)));
-        myUser.get().setRoles(roles);
-        userRepository.save(myUser.get());
-    }
-
-    @Override
-    @Transactional
     public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
@@ -87,9 +70,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void save(User user) {
-        String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
-        user.setPassword(encodedPassword);
         userRepository.save(user);
     }
+
 }

@@ -32,6 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/index").permitAll()// доступность всем
                 // защищенные URL
                 .antMatchers("/admin/**").hasRole("ADMIN")  // разрешаем входить на /admin пользователям с ролью admin
+                .antMatchers("/vip/**").hasAnyRole("ADMIN", "VIP")
                 .antMatchers("/user/**").hasAnyRole("ADMIN", "USER", "VIP")
                 .anyRequest().authenticated()
                 .and()

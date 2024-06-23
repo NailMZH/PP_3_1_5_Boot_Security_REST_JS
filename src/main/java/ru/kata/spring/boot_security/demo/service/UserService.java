@@ -9,8 +9,6 @@ public interface UserService extends UserDetailsService {
     User findById(Long id);
     List<User> findAll();
     void saveUser(User user, String[] selectedRoles);
-
-    void updateUser(User oldUser, User newUser, String[] selectedRoles);
     void deleteById(Long id);
     User getUserByUsername(String username);
     public void save(User user);
