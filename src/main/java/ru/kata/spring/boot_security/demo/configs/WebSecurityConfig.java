@@ -37,29 +37,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .permitAll()
-                .loginPage("/login") // указываем страницу с формой логина
-                .successHandler(successUserHandler) //указываем логику обработки при логине
+                .successHandler(successUserHandler)//указываем логику обработки при логине
                 .permitAll();
                 http
                         .logout()
-                        .logoutUrl("/logout") // указываем URL для выхода
                         .logoutSuccessUrl("/login") // указываем URL, на который перейти после выхода
                         .invalidateHttpSession(true); // инвалидация сессии после выхода
     }
 
-    // аутентификация inMemory
-//    @Bean
-//    @Override
-//    public UserDetailsService userDetailsService() {
-//        UserDetails user =
-//                User.withDefaultPasswordEncoder()
-//                        .username("user")
-//                        .password("user")
-//                        .roles("USER")
-//                        .build();
-//        return new InMemoryUserDetailsManager(user);
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); // Необходимо для шифрования паролей

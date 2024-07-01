@@ -1,15 +1,13 @@
 package ru.kata.spring.boot_security.demo.models;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 
 @Entity
 @Table(name = "users")
@@ -28,7 +26,7 @@ public class User implements UserDetails {
     private String lastName;
 
     @Column(name = "age")
-    private Byte age;
+    private int age;
 
     @Column(name = "email")
     private String email;
@@ -42,8 +40,8 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-
     private Set<Role> roles;
+
 
     public Set<Role> getRoles() {
         return roles;
@@ -55,6 +53,15 @@ public class User implements UserDetails {
 
     public void addRole(Role role) {
         this.roles.add(role);
+    }
+
+
+    //избавление от лишних элементов и объединение в строку с пробелом
+    public String getRoleNames() {
+        return roles.stream()
+                .map(role -> role.getRole()
+                        .replace("ROLE_", ""))
+                .collect(Collectors.joining(" "));
     }
 
     @Override
@@ -82,11 +89,11 @@ public class User implements UserDetails {
         return true;
     }
 
-@Override
-public Collection<? extends GrantedAuthority> getAuthorities() {
-    return roles.stream().map(role -> new SimpleGrantedAuthority
-            (role.getRole())).collect(Collectors.toList());
-}
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream().map(role -> new SimpleGrantedAuthority
+                (role.getRole())).collect(Collectors.toList());
+    }
 
     @Override
     public String getPassword() {
@@ -113,11 +120,11 @@ public Collection<? extends GrantedAuthority> getAuthorities() {
         this.lastName = lastName;
     }
 
-    public Byte getAge() {
+    public int getAge() {
         return age;
     }
 
-    public void setAge(Byte age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
@@ -145,7 +152,7 @@ public Collection<? extends GrantedAuthority> getAuthorities() {
         this.password = password;
     }
 
-    public User(String username, String firstName, String lastName, Byte age, String email, String password) {
+    public User(String username, String firstName, String lastName, int age, String email, String password) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;

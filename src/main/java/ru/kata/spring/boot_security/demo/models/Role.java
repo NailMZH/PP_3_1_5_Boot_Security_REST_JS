@@ -53,13 +53,22 @@ public class Role implements GrantedAuthority {
     }
 
     public String toString() {
-        return this.role;
+
+        return getRole().substring(getRole().indexOf('_') +1);
     }
 
     public Role() {
     }
 
     public Role(String role) {
+        this.role = role;
+    }
+
+    public String getName() {
+        return role;
+    }
+    public Role(Long id, String role) {
+        this.id = id;
         this.role = role;
     }
 }

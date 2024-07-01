@@ -21,8 +21,19 @@ public class UserController {
     public String printUser(Principal principal, Model model) {
         User user = userService.getUserByUsername(principal.getName());
         model.addAttribute("user", user);
-        return "users";
+        return "user";
     }
-
+    @GetMapping(value = "/userAdmin")
+    public String printUserAdmin(Principal principal, Model model) {
+        User user = userService.getUserByUsername(principal.getName());
+        model.addAttribute("user", user);
+        return "userAdmin";
+    }
+    @GetMapping(value = "/userVip")
+    public String printUserVip(Principal principal, Model model) {
+        User user = userService.getUserByUsername(principal.getName());
+        model.addAttribute("user", user);
+        return "userVip";
+    }
 
 }

@@ -33,13 +33,13 @@
 //
 //        User user1 = new User
 //                ("user", "Сергей", "Петров",
-//                        (byte) 34, "user1@mail.ru", new BCryptPasswordEncoder().encode("1"));
+//                         34, "user1@mail.ru", new BCryptPasswordEncoder().encode("1"));
 //        User user2 = new User
 //                ("admin", "Наиль", "Mажитов",
-//                        (byte) 53, "admin@mail.ru", new BCryptPasswordEncoder().encode("100"));
+//                         53, "admin@mail.ru", new BCryptPasswordEncoder().encode("100"));
 //        User user3 = new User
 //                ("vip", "Иван", "Сидоров",
-//                        (byte) 44, "user2@mail.ru", new BCryptPasswordEncoder().encode("2"));
+//                         44, "user2@mail.ru", new BCryptPasswordEncoder().encode("2"));
 //
 ////
 //
@@ -53,3 +53,4 @@
 //
 //    }
 //}
+//
