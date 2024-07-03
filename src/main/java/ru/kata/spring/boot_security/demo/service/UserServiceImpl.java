@@ -45,6 +45,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateUser(User user, String role) {
         User userNotUpdate = findById(user.getId());
+        userNotUpdate.setUsername(user.getUsername());
         userNotUpdate.setFirstName(user.getFirstName());
         userNotUpdate.setLastName(user.getLastName());
         userNotUpdate.setAge(user.getAge());
@@ -63,29 +64,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByUsername(String username) {
-
-        return userRepository.findByUsername(username);
-    }
-    @Override
     @Transactional(propagation = Propagation.NEVER)
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email);
         if (user == null) {
-            throw new UsernameNotFoundException(String.format("User '%s' not found", username));
+            throw new UsernameNotFoundException(String.format("User '%s' not found", email));
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getAuthorities());
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), user.getAuthorities());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public User getByEmail(String email) {
+    public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
     @Override
     public void addUser(User user, String role) {
-        if (getByEmail(user.getEmail()) == null) {
+        if (findByEmail(user.getEmail()) == null) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setRoles(roleService.getSetRoles(role));
             userRepository.save(user);

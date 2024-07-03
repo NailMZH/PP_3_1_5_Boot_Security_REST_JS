@@ -13,16 +13,9 @@ public interface UserService extends UserDetailsService {
 
     void deleteById(Long id);
 
-    User getUserByUsername(String username);
-
-//    public void save(User user);
-
-    //    Map<User, String> createUsersCollection(List<User> users);
-//    User getByEmail(String email);
     void updateUser(User user, String role);
 
-//    Map<User, String> createUserCollection(List<User> users);
-    User getByEmail(String email);
+    User findByEmail(String email);
 
     void addUser(User user,String role);
 }

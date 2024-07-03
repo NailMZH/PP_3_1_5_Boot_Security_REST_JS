@@ -73,6 +73,10 @@
                                 <form align="center" class="offset-md-4 col-md-4 mt-4 mb-4" th:align="center"
                                       th:action="@{/saveUser}" th:object="${user}" method="POST">
 
+                                    <label for="username"><b>Username</b></label>
+                                    <input th:name="username" th:type="text" class="form-control" id="username"
+                                           required/>
+
                                     <label for="firstName"><b>First Name</b></label>
                                     <input th:name="firstName" th:type="text" class="form-control" id="firstName"
                                            required/>

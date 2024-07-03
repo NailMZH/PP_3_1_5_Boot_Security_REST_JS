@@ -41,7 +41,6 @@
 //                ("vip", "Иван", "Сидоров",
 //                         44, "user2@mail.ru", new BCryptPasswordEncoder().encode("2"));
 //
-////
 //
 //        user1.setRoles(new HashSet<>(Set.of(role2)));
 //        user2.setRoles(new HashSet<>(Set.of(role1)));
