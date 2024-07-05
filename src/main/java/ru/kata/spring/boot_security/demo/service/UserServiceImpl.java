@@ -44,13 +44,15 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateUser(User user, String role) {
+
         User userNotUpdate = findById(user.getId());
         userNotUpdate.setUsername(user.getUsername());
         userNotUpdate.setFirstName(user.getFirstName());
         userNotUpdate.setLastName(user.getLastName());
         userNotUpdate.setAge(user.getAge());
         userNotUpdate.setEmail(user.getEmail());
-        if (!user.getPassword().equals("")) {
+        if (userNotUpdate.getPassword().equals(user.getPassword())) {
+        } else {
             userNotUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         if (role != null) {
