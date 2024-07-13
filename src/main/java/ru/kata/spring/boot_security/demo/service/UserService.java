@@ -1,21 +1,30 @@
 package ru.kata.spring.boot_security.demo.service;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 
 import java.util.List;
 import java.util.Map;
 
 public interface UserService extends UserDetailsService {
-    User findById(Long id);
+
+  @Override
+    UserDetails loadUserByUsername(String email) throws UsernameNotFoundException;
 
     List<User> getAllUsers();
 
+    User findById(Long id);
+
     void deleteById(Long id);
 
-    void updateUser(User user, String role);
+    void update(User user);
 
     User findByEmail(String email);
 
-    void addUser(User user,String role);
+    void save(User user);
+
+    List<Role> listRoles();
 }

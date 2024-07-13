@@ -1,55 +1,42 @@
-//package ru.kata.spring.boot_security.demo.init;
-//
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.stereotype.Component;
-//import ru.kata.spring.boot_security.demo.models.Role;
-//import ru.kata.spring.boot_security.demo.models.User;
-//import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
-//import ru.kata.spring.boot_security.demo.repositories.UserRepository;
-//
-//import javax.annotation.PostConstruct;
-//import java.util.HashSet;
-//import java.util.Set;
-//
-//@Component
-//public class UsersInit {
-//    private final UserRepository userRepository;
-//    private final RoleRepository roleRepository;
-//
-//    public UsersInit(UserRepository userRepository, RoleRepository roleRepository) {
-//        this.userRepository = userRepository;
-//        this.roleRepository = roleRepository;
-//    }
-//
-//    @PostConstruct
-//    public void createTestUsersWithRoles() {
-//        Role role1 = new Role("ROLE_ADMIN");
-//        Role role2 = new Role("ROLE_USER");
-//        Role role3 = new Role("ROLE_VIP");
-//
-//        roleRepository.save(role1);
-//        roleRepository.save(role2);
-//        roleRepository.save(role3);
-//
-//        User user1 = new User
-//                ("user", "Сергей", "Петров",
-//                         34, "user1@mail.ru", new BCryptPasswordEncoder().encode("1"));
-//        User user2 = new User
-//                ("admin", "Наиль", "Mажитов",
-//                         53, "admin@mail.ru", new BCryptPasswordEncoder().encode("100"));
-//        User user3 = new User
-//                ("vip", "Иван", "Сидоров",
-//                         44, "user2@mail.ru", new BCryptPasswordEncoder().encode("2"));
-//
-//
-//        user1.setRoles(new HashSet<>(Set.of(role2)));
-//        user2.setRoles(new HashSet<>(Set.of(role1)));
-//        user3.setRoles(new HashSet<>(Set.of(role3)));
-//
-//        userRepository.save(user1);
-//        userRepository.save(user2);
-//        userRepository.save(user3);
-//
-//    }
-//}
-//
+package ru.kata.spring.boot_security.demo.init;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
+import ru.kata.spring.boot_security.demo.models.Role;
+import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
+import ru.kata.spring.boot_security.demo.repositories.UserRepository;
+import ru.kata.spring.boot_security.demo.service.UserService;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+@Component
+public class UsersInit {
+    private final UserService userService;
+
+    public UsersInit(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PostConstruct
+    public void initializeUsers() {
+        User user = userService.findByEmail("admin@mail.ru");
+        if (user == null) {
+            Role userRole = new Role("ROLE_USER");
+            Role adminRole = new Role("ROLE_ADMIN");
+            List<Role> adminRoles = new ArrayList<>();
+//            adminRoles.add(userRole);
+            adminRoles.add(adminRole);
+            User admin = new User( adminRoles,"xamz", "tutu", 20L, "admin@mail.ru", "100");
+
+            userService.save(admin);
+
+        }
+
+    }
+}
+

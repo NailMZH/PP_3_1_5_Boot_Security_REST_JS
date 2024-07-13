@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import ru.kata.spring.boot_security.demo.service.UserService;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
 
@@ -16,47 +18,50 @@ import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private UserServiceImpl userServiceImpl;
+    private UserService userService;
     private SuccessUserHandler successUserHandler; // класс, в котором описана логика перенаправления пользователей по ролям
 
     @Autowired
-    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserServiceImpl userServiceImpl) {
+    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserService userService) {
         this.successUserHandler = successUserHandler;
-        this.userServiceImpl = userServiceImpl;
+        this.userService = userService;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+        http.
+                csrf().disable()
                 .authorizeRequests()                // делаем страницу регистрации недоступной для авторизированных пользователей
-                .antMatchers("/", "/index").permitAll()// доступность всем
-                // защищенные URL
-                .antMatchers("/admin/**").hasRole("ADMIN")  // разрешаем входить на /admin пользователям с ролью admin
-                .antMatchers("/vip/**").hasAnyRole("ADMIN", "VIP")
-                .antMatchers("/user/**").hasAnyRole("ADMIN", "USER", "VIP")
-                .anyRequest().authenticated()
+
+                .antMatchers("/user/**").authenticated()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/api/**").permitAll()
                 .and()
-                .formLogin()
+                .formLogin().successHandler(successUserHandler)//указываем логику обработки при логине
+                .permitAll()
                 .loginPage("/login")
-                .loginProcessingUrl("/process")
-                .successHandler(successUserHandler)//указываем логику обработки при логине
-                .permitAll();
-                http
-                        .logout()
-                        .logoutSuccessUrl("/login") // указываем URL, на который перейти после выхода
-                        .invalidateHttpSession(true); // инвалидация сессии после выхода
+                .usernameParameter("email")
+                .passwordParameter("password")
+                .permitAll()
+                .and()
+                .logout()
+                .permitAll()
+                .logoutRequestMatcher((new AntPathRequestMatcher("/logout")))
+                .logoutSuccessUrl("/login")
+                .and().csrf().disable();
     }
 
 
-    @Bean
-    public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); // Необходимо для шифрования паролей
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder () {
+            return new BCryptPasswordEncoder(); // Необходимо для шифрования паролей
+        }
 
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        authenticationProvider.setUserDetailsService(userServiceImpl);
-        return authenticationProvider;
+        @Bean
+        public DaoAuthenticationProvider daoAuthenticationProvider () {
+            DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+            authenticationProvider.setPasswordEncoder(passwordEncoder());
+            authenticationProvider.setUserDetailsService(userService);
+            return authenticationProvider;
+        }
     }
-}
