@@ -1,11 +1,14 @@
+
 const userTable = $('#tbodyAllUserTable');
 let editModalForm = document.forms['editModalForm']
 let deleteModalForm = document.forms['deleteModalForm']
 
 
+
 $(async function () {
     await getAuthUser();
     await getAllUsers();
+    addUser();
     editUser();
     deleteUser()
 })
@@ -19,11 +22,24 @@ async function fillModalForm(form, modal, id) {
     modal.show()
     let user = await getUser(id)
     form.id.value = user.id
-    form.roles.value = user.roles[0].authority
+    form.roles.value = user.roles[0].id
     form.firstName.value = user.firstName
     form.lastName.value = user.lastName
     form.age.value = user.age
     form.email.value = user.email
+    form.password.value = user.password
+}
+
+async function fillModalFormDelete(form, modal, id) {
+    modal.show()
+    let user = await getUser(id)
+    form.id.value = user.id
+    form.roles.value = user.roles[0].id
+    form.firstName.value = user.firstName
+    form.lastName.value = user.lastName
+    form.age.value = user.age
+    form.email.value = user.email
+    // form.password.value = user.password
 }
 
 
@@ -87,7 +103,7 @@ async function getAllUsers() {
 
 // User Editor
 async function openEditModal(id) {
-    const modal = new bootstrap.Modal(document.querySelector('#modalEdit'))
+    const modal = new bootstrap.Modal(document.querySelector('#editModal'))
     await fillModalForm(editModalForm, modal, id)
 }
 
@@ -125,17 +141,19 @@ function editUser() {
     })
 }
 
+
 // Delete User
 async function openDeleteModal(id) {
     const modal = new bootstrap.Modal(document.querySelector('#deleteModal'))
-    await fillModalForm(deleteModalForm, modal, id)
+    await fillModalFormDelete(deleteModalForm, modal, id)
     switch (deleteModalForm.roles.value) {
-        case '1':
+        case '2':
             deleteModalForm.roles.value = 'USER'
             break
-        case '2':
+        case '1':
             deleteModalForm.roles.value = 'ADMIN'
             break
+
     }
 }
 
@@ -153,6 +171,5 @@ function deleteUser() {
         })
     })
 }
-
 
 

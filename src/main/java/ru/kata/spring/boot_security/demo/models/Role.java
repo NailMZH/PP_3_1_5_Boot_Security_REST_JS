@@ -1,4 +1,6 @@
 package ru.kata.spring.boot_security.demo.models;
+
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Objects;
 
 @Data
 @NoArgsConstructor
@@ -37,16 +38,31 @@ public class Role implements GrantedAuthority {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Role role = (Role) o;
-        return id.equals(role.id) && authority.equals(role.authority) && Objects.equals(users, role.users);
-    }
-
-    @Override
     public int hashCode() {
-        return Objects.hash(id, authority, users);
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
     }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
 
+        Role other = (Role) obj;
+        if (id == null) {
+            return other.id == null;
+        } else if (authority.equals(other.authority)) {
+            return true;
+        } else {
+            return id.equals(other.id);
+        }
+    }
 }

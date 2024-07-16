@@ -1,43 +1,37 @@
-let formAddNewUser = document.forms["formAddNewUser"];
-formAddNewUser.roles.options[1].selected=true;
-console.log(formAddNewUser);
 
-createNewUser()
-function createNewUser() {
-    formAddNewUser.addEventListener("submit", async (ev) => {
-        ev.preventDefault();
-        let rolesId = [];
-        for (let i =  0; i < formAddNewUser.roles.options.length; i++) {
-            if (formAddNewUser.roles.options[i].selected) rolesId.push("ROLE_" + formAddNewUser.roles.options[i].text);
-        }
-        try {
-            const response = await fetch("/api/users", {
-                method: 'POST', //Записываем данные
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    firstName: formAddNewUser.firstName.value,
-                    lastName: formAddNewUser.lastName.value,
-                    age: formAddNewUser.age.value,
-                    email: formAddNewUser.email.value,
-                    password: formAddNewUser.password.value,
-                    roles: rolesId
+let newUserForm = document.forms["newUserForm"];
+
+function addUser() {
+    newUserForm.addEventListener('submit', event => {
+        event.preventDefault()
+        let newUserRoles = []
+        for (let i = 0; i < newUserForm.roles.options.length; i++) {
+            if (newUserForm.roles.options[i].selected) {
+                newUserRoles.push({
+                    id: newUserForm.roles.options[i].value,
+                    authority: "ROLE_" + newUserForm.roles.options[i].text
                 })
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();// Обработка ошибки
-                alert(`Ошибка при создании нового пользователя: ${errorText}`);
-                return;
             }
-
-            formAddNewUser.reset();// Сброс формы и обновление таблицы
-            $('#usersTable').click();
-          getAllUsers();
-        } catch (error) {
-            console.error('Ошибка:', error);// Ловим и обробатываем ошибки
-            alert('Произошла ошибка при создании пользователя. Пожалуйста, попробуйте еще раз.');
         }
-    });
+        console.log(newUserRoles);
+        fetch('/api/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: newUserForm.id.value,
+                roles: newUserRoles,
+                firstName: newUserForm.firstName.value,
+                lastName: newUserForm.lastName.value,
+                age: newUserForm.age.value,
+                email: newUserForm.email.value,
+                password: newUserForm.password.value
+            })
+        }).then(() => {
+            newUserForm.reset()
+            getAllUsers()
+            $('#usersTable').click()
+        })
+    })
 }

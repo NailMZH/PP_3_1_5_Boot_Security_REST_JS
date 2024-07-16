@@ -6,21 +6,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
-import java.util.*;
 
+import java.util.*;
 
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private Map<String, String> roleMappings;
     private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, @Lazy PasswordEncoder passwordEncoder) {
@@ -47,11 +45,6 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    @Override
-    @Transactional
-    public void update(User user) {
-        userRepository.save(user);
-    }
 
     @Override
     @Transactional(readOnly = true)
@@ -72,9 +65,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void save(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.saveAndFlush(user);
+    public void saveUser(User user) {
+        if (findByEmail(user.getEmail()) == null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userRepository.saveAndFlush(user);
+        }
+    }
+
+
+    @Override
+    @Transactional
+    public void update(User user) {
+        User existUser = userRepository.findById(user.getId()).orElseThrow(() -> new RuntimeException("User not find"));
+
+        if (existUser.getPassword().equals(user.getPassword())) {
+        } else {
+            existUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+
+        existUser.setRoles(user.getRoles());
+        existUser.setFirstName(user.getFirstName());
+        existUser.setLastName(user.getLastName());
+        existUser.setAge(user.getAge());
+        existUser.setEmail(user.getEmail());
+        userRepository.save(existUser);
     }
 
     @Override

@@ -24,7 +24,7 @@ public interface UserService extends UserDetailsService {
 
     User findByEmail(String email);
 
-    void save(User user);
+    void saveUser(User user);
 
     List<Role> listRoles();
 }
